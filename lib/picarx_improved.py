@@ -14,9 +14,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 try:
     sys.path.append(r'/home/hannah/picar-x/lib')
     from servo import Servo 
-    logging.debug("Servo imported")
     from pwm import PWM
-    logging.debug("PWM imported")
     from filedb import fileDB
     from pin import Pin
     from adc import ADC
