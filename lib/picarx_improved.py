@@ -1,20 +1,25 @@
 # from ezblock import Servo,PWM,fileDB,Pin,ADC
 from ast import Import
-from servo import Servo 
-from pwm import PWM
-from pin import Pin
-from adc import ADC
-from filedb import fileDB
 import time
 
 try:
-    from ezblock import *
-    from ezblock import __reset_mcu__
-    __reset_mcu__()
+    from servo import Servo 
+    from pwm import PWM
+    from filedb import fileDB
+    from pin import Pin
+    from adc import ADC
+    # from ezblock import *
+    # from ezblock import __reset_mcu__
+    # __reset_mcu__()
     time.sleep(0.01)
 except ImportError:
     print("This computer does not appear to be a PiCar-X system (ezblock is not present). Shadowing hardware calls with substitute functions")
     from sim_ezblock import *
+except ModuleNotFoundError:
+    print("This computer does not appear to be a PiCar-X system (ezblock is not present). Shadowing hardware calls with substitute functions")
+    from sim_ezblock import *
+# else:
+#     print("Classes imported.")
 
 class Picarx(object):
     PERIOD = 4095
