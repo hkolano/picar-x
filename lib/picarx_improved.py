@@ -48,16 +48,19 @@ class Picarx(object):
         self.dir_servo_pin.angle(self.dir_cal_value)
         self.camera_servo_pin1.angle(self.cam_cal_value_1)
         self.camera_servo_pin2.angle(self.cam_cal_value_2)
+        logging.debug("Checkpoint1")
 
         self.left_rear_pwm_pin = PWM("P13")
         self.right_rear_pwm_pin = PWM("P12")
         self.left_rear_dir_pin = Pin("D4")
         self.right_rear_dir_pin = Pin("D5")
+        logging.debug("checkpoint 2")
 
 
         self.S0 = ADC('A0')
         self.S1 = ADC('A1')
         self.S2 = ADC('A2')
+        logging.debug("Checkpoint 3")
 
         self.motor_direction_pins = [self.left_rear_dir_pin, self.right_rear_dir_pin]
         self.motor_speed_pins = [self.left_rear_pwm_pin, self.right_rear_pwm_pin]
@@ -65,6 +68,7 @@ class Picarx(object):
         self.cali_dir_value = [int(i.strip()) for i in self.cali_dir_value.strip("[]").split(",")]
         self.cali_speed_value = [0, 0]
         self.dir_current_angle = 0
+        logging.debug("Checkpoint 4")
         # PWM
         for pin in self.motor_speed_pins:
             pin.period(self.PERIOD)
