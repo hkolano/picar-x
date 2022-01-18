@@ -4,6 +4,7 @@ import time
 import logging
 from logdecorator import log_on_start , log_on_end , log_on_error
 import atexit
+import sys
 
 logging_format = '%(asctime)s: %(message)s'
 logging.basicConfig(format=logging_format, level=logging.INFO, datefmt ="%H:%M:%S")
@@ -11,6 +12,7 @@ logging.basicConfig(format=logging_format, level=logging.INFO, datefmt ="%H:%M:%
 logging.getLogger().setLevel(logging.DEBUG)
 
 try:
+    sys.path.append(r'/home/hannah/picar-x/lib')
     from servo import Servo 
     logging.debug("Servo imported")
     from pwm import PWM
