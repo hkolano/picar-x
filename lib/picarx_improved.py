@@ -1,6 +1,14 @@
 # from ezblock import Servo,PWM,fileDB,Pin,ADC
 from ast import Import
 import time
+import logging
+from logdecorator import log_on_start , log_on_end , log_on_error
+import atexit
+
+logging_format = '%(asctime)s: %(message)s'
+logging.basicConfig(format=logging_format, level=logging.INFO, datefmt ="%H:%M:%S")
+
+logging.getLogger().setLevel(logging.DEBUG)
 
 try:
     from servo import Servo 
@@ -13,19 +21,20 @@ try:
     # __reset_mcu__()
     time.sleep(0.01)
 except ImportError:
-    print("This computer does not appear to be a PiCar-X system (ezblock is not present). Shadowing hardware calls with substitute functions")
+    print("(Import Error) This computer does not appear to be a PiCar-X system. Shadowing hardware calls with substitute functions.")
     from sim_ezblock import *
 except ModuleNotFoundError:
-    print("This computer does not appear to be a PiCar-X system (ezblock is not present). Shadowing hardware calls with substitute functions")
+    print("(Module Error) This computer does not appear to be a PiCar-X system. Shadowing hardware calls with substitute functions")
     from sim_ezblock import *
-# else:
-#     print("Classes imported.")
+
+logging.debug("Classes imported.")
 
 class Picarx(object):
     PERIOD = 4095
     PRESCALER = 10
     TIMEOUT = 0.02
 
+    @log_on_end(logging.DEBUG, "PiCar object initialized.")
     def __init__(self):
         self.dir_servo_pin = Servo(PWM('P2'))
         self.camera_servo_pin1 = Servo(PWM('P0'))
@@ -58,8 +67,6 @@ class Picarx(object):
         for pin in self.motor_speed_pins:
             pin.period(self.PERIOD)
             pin.prescaler(self.PRESCALER)
-
-
 
     def set_motor_speed(self,motor,speed):
         # global cali_speed_value,cali_dir_value
@@ -97,7 +104,6 @@ class Picarx(object):
         if value == 1:
             self.cali_dir_value[motor] = -1 * self.cali_dir_value[motor]
         self.config_flie.set("picarx_dir_motor", self.cali_dir_value)
-
 
     def dir_servo_angle_calibration(self,value):
         # global dir_cal_value
@@ -194,7 +200,6 @@ class Picarx(object):
         self.set_motor_speed(1, 0)
         self.set_motor_speed(2, 0)
 
-
     def Get_distance(self):
         timeout=0.01
         trig = Pin('D8')
@@ -223,7 +228,11 @@ class Picarx(object):
 
 
 if __name__ == "__main__":
+    # Initialize PiCar object
     px = Picarx()
+    # Make sure the motors stop when the script is stopped
+    atexit.register(px.stop)
+
     px.forward(50)
     time.sleep(1)
     px.stop()
