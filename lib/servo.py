@@ -1,5 +1,6 @@
 # from .basic import _Basic_class
 import time
+from pwm import PWM
 
 class Servo(object):
     MAX_PW = 2500
@@ -33,7 +34,6 @@ class Servo(object):
         self.pwm.pulse_width(value)
 
 def test():
-    from ezblock import PWM
     print("Test")
     p = PWM("P0")
     s0 = Servo(p)
