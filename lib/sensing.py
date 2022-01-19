@@ -86,8 +86,8 @@ class Interpreter():
             if closeness_vector[0] == closeness_vector[2]:
                 print("Centered!")
             elif closeness_vector[0] > closeness_vector[2]:
-                print("slightly left???")
+                print("slightly right???")
             elif closeness_vector[0] < closeness_vector[2]:
-                print("slightly right??")
+                print("slightly left??")
         else:
             print("Line not centered...")
