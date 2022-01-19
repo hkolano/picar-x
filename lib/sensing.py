@@ -89,5 +89,18 @@ class Interpreter():
                 print("slightly right???")
             elif closeness_vector[0] < closeness_vector[2]:
                 print("slightly left??")
+        # if center sensor is slightly off the line
+        elif closeness_vector[1] == 2:
+            if closeness_vector[0] > 1:
+                print("Pretty right")
+            elif closeness_vector[2] > 1:
+                print("Pretty left")
+            else:
+                print("no idea. Vector is ", closeness_vector)
+        elif closeness_vector[1] == 1:
+            if closeness_vector[0] > 1:
+                print("VERY RIGHT")
+            elif closeness_vector[2] > 1:
+                print("VERY LEFT")
         else:
-            print("Line not centered...")
+            print("wtf how did you get here")
