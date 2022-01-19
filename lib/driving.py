@@ -25,9 +25,10 @@ class MovePicar():
         time.sleep(0.25)
 
     def parallel_park(self, side="right"):
-        self.move("forward", 0, 40, 0.7)
+        self.move("forward", 0, 40, 0.8)
         if side == "right":
-            self.move("backward", 40, 25, 1)
+            self.move("backward", 40, 30, 2)
+            self.move("backward", 30, 30, 1)
 
 if __name__ == "__main__":
     px = Picarx()
