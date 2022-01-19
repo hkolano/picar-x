@@ -75,7 +75,7 @@ class Picarx(object):
             pin.period(self.PERIOD)
             pin.prescaler(self.PRESCALER)
 
-        atexit.register(self.stop)
+        atexit.register(self.cleanup)
         if is_hardware == True:
             self.dir_servo_angle_calibration(2)
 
@@ -215,28 +215,12 @@ class Picarx(object):
             self.set_motor_speed(1, speed)
             self.set_motor_speed(2, -1*speed)                  
 
-    # def forward(self,speed):
-    #         current_angle = self.dir_current_angle
-    #         if current_angle != 0:
-    #             abs_current_angle = abs(current_angle)
-    #             # if abs_current_angle >= 0:
-    #             if abs_current_angle > 40:
-    #                 abs_current_angle = 40
-    #             power_scale = (100 - abs_current_angle) / 100.0 
-    #             print("power_scale:",power_scale)
-    #             if (current_angle / abs_current_angle) > 0:
-    #                 self.set_motor_speed(1, speed)
-    #                 self.set_motor_speed(2, -1*speed * power_scale)
-    #             else:
-    #                 self.set_motor_speed(1, speed * power_scale)
-    #                 self.set_motor_speed(2, -1*speed )
-    #         else:
-    #             self.set_motor_speed(1, speed)
-    #             self.set_motor_speed(2, -1*speed)  
-
     def stop(self):
         self.set_motor_speed(1, 0)
         self.set_motor_speed(2, 0)
+
+    def cleanup(self):
+        self.stop()
 
     def Get_distance(self):
         timeout=0.01
