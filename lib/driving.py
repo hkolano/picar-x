@@ -34,6 +34,16 @@ class MovePicar():
             self.move("backward", 40, 30, 0.95)
         self.straighten_out()
 
+    def k_turn(self, side="right"):
+        if side=="right":
+            self.move(angle=40, duration=1)
+            self.move("backward", angle=-40, duration=1)
+            self.move(angle=40, duration=1)
+        else:
+            self.move(angle=-40, duration=1)
+            self.move("backward", angle=40, duration=1)
+            self.move(angle=40, duration=1)
+
 if __name__ == "__main__":
     px = Picarx()
     move = MovePicar(px)
