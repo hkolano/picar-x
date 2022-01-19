@@ -1,3 +1,4 @@
+from fileinput import close
 from statistics import mean
 from picarx_improved import Picarx
 
@@ -70,7 +71,23 @@ class Interpreter():
         Returns:
         position: number on interval [-1 1] (positive = too far left) 
         indicating position of robot with respect to line'''
+        closeness_vector = []
         if self.polarity == 1:
-            # for value in gray_data:
-            center_of_light = (gray_data[0]*1 + gray_data[1]*2 + gray_data[2]*3)/sum(gray_data)
-            print("center of light: ", center_of_light)
+            for val in gray_data:
+                if val < self.thresh_far:
+                    closeness_vector.append(1)
+                elif self.thresh_far < val < self.thresh_close:
+                    closeness_vector.append(2)
+                else:
+                    closeness_vector.append(3)
+        
+        # if center sensor is over line
+        if closeness_vector[1] == 3:
+            if closeness_vector[0] == closeness_vector[2]:
+                print("Centered!")
+            elif closeness_vector[0] > closeness_vector[2]:
+                print("slightly left???")
+            elif closeness_vector[0] < closeness_vector[2]:
+                print("slightly right??")
+        else:
+            print("Line not centered...")
