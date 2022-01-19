@@ -24,7 +24,7 @@ class MovePicar():
         self.car.set_dir_servo_angle(0)
         time.sleep(0.25)
 
-    def parallel_park(self, side):
+    def parallel_park(self, side="right"):
         self.move("forward", 0, 40, 0.7)
         if side == "right":
             self.move("backward", 40, 25, 1)
@@ -32,6 +32,4 @@ class MovePicar():
 if __name__ == "__main__":
     px = Picarx()
     move = MovePicar(px)
-    move.move("forward", 0, 50, 0.5)
-    move.move("backward", 0, 50, 0.5)
-    move.move("forward", 20, 50, 1)
+    move.parallel_park("right")
