@@ -21,17 +21,21 @@ class Sensing():
 
 class Interpreter():
 
-    def __init__(self, sensor, sensitivity=500, polarity=1):
+    def __init__(self, sensor, polarity=1, thresh_close=1000, thresh_far = 600):
         ''' Initialize line interpreter. 
         Inputs:
         sensor: the Sensing object
-        sensitivity: how different light & dark readings are
-        polarity: 1 - line is lighter; -1 - line is darker'''
+        polarity: 1 - line is lighter; -1 - line is darker
+        thresh_close: more extreme than thresh_close = line
+        thresh_far: more extreme than thresh_far = floor'''
         self.sensor = sensor
-        self.sensitivity = sensitivity
+        self.thresh_close = thresh_close
+        self.thresh_far = thresh_far
         self.polarity = polarity
 
     def calibrate(self):
+        ''' Run to set self.thresh values and self.polarity via 
+        a calibration routine with the user. '''
         # Get grayscale values for the floor and the line
         input("Place the sensor over the floor and hit enter.")
         floor_data = self.sensor.get_grayscale_data()
@@ -60,5 +64,12 @@ class Interpreter():
         print("polarity is: ", self.polarity)
         print("Close threshold: ", self.thresh_close, "Far threshold: ", self.thresh_far)
         
-
-
+    def interpret_location(self, gray_data):
+        ''' Interprets grayscale data and returns a guess as to where
+         the robot is in reference to the line.
+        Returns:
+        position: number on interval [-1 1] (positive = too far left) 
+        indicating position of robot with respect to line'''
+        if self.polarity == 1:
+            center_of_light = (gray_data[0]*1 + gray_data[1]*2 + gray_data[2]*3)/sum(gray_data)
+            print("center of light: ", center_of_light)

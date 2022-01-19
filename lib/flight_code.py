@@ -11,6 +11,7 @@ if __name__ == "__main__":
 
     int.calibrate()
 
-    # while True:
-    #     print(sens.get_grayscale_data())
-    #     time.sleep(1)
+    while True:
+        data = sens.get_grayscale_data()
+        print(int.interpret_location())
+        time.sleep(1)
