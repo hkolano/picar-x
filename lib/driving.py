@@ -30,11 +30,11 @@ class MovePicar():
             self.move("backward", 40, 30, 2.3)
             self.move("backward", -40, 30, 0.95)
         else:
-            self.move("backward", -40, 20, 2.3)
-            self.move("backward", 40, 30, 0.95)
+            self.move("backward", -40, 20, 1.95)
+            self.move("backward", 40, 30, 2.4)
         self.straighten_out()
 
 if __name__ == "__main__":
     px = Picarx()
     move = MovePicar(px)
-    move.parallel_park("right")
+    move.parallel_park("left")
