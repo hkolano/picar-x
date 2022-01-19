@@ -13,5 +13,6 @@ if __name__ == "__main__":
 
     while True:
         data = sens.get_grayscale_data()
+        print(data)
         print(int.interpret_location())
         time.sleep(1)

@@ -71,5 +71,6 @@ class Interpreter():
         position: number on interval [-1 1] (positive = too far left) 
         indicating position of robot with respect to line'''
         if self.polarity == 1:
+            # for value in gray_data:
             center_of_light = (gray_data[0]*1 + gray_data[1]*2 + gray_data[2]*3)/sum(gray_data)
             print("center of light: ", center_of_light)
