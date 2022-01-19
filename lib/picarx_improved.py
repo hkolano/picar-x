@@ -266,7 +266,7 @@ if __name__ == "__main__":
     px = Picarx()
     # Make sure the motors stop when the script is stopped
     atexit.register(px.stop)
-    px.dir_servo_angle_calibration(10)
+    px.dir_servo_angle_calibration(2) # Calibrated to 2 degrees
 
     logging.debug("Turning wheels....")
     px.set_dir_servo_angle(0)
