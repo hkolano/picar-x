@@ -268,10 +268,10 @@ if __name__ == "__main__":
     atexit.register(px.stop)
 
     logging.debug("Turning wheels....")
-    px.set_dir_servo_angle(30)
+    px.set_dir_servo_angle(0)
     px.forward(50)
 
-    time.sleep(2)
+    time.sleep(5)
     px.stop()
     logging.debug("Done.")
     # set_dir_servo_angle(0)
