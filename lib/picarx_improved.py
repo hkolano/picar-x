@@ -189,12 +189,17 @@ class Picarx(object):
         current_angle = self.dir_current_angle
         if current_angle != 0:
             abs_current_angle = abs(current_angle)
+
+            # Maximum angle: 40 degrees
+            if abs_current_angle > 40:
+                abs_current_angle = 40
+            
+            # Calculate differential drive for the commanded angle
             turn_r = 9.8/tan(radians(abs_current_angle)) # turn radius of center of back wheels
             inside_r = turn_r-5.8 # turn radius of inner wheel
             outside_r = turn_r+5.8 # turn radius of outer wheel
             inner_speed_ratio = inside_r/turn_r 
             outer_speed_ratio = outside_r/turn_r
-            # if abs_current_angle >= 0:
             
             if (current_angle / abs_current_angle) > 0:
                 self.set_motor_speed(1, speed*outer_speed_ratio)
