@@ -36,9 +36,9 @@ class MovePicar():
 
     def k_turn(self, side="right"):
         if side=="right":
-            self.move(angle=40, duration=1)
-            self.move("backward", angle=-40, duration=0.6)
-            self.move()
+            self.move(angle=40, duration=0.9)
+            self.move("backward", angle=-40, duration=0.75)
+            self.move(duration=0.5)
         else:
             self.move(angle=-40, duration=1)
             self.move("backward", angle=40, duration=1)
