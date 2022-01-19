@@ -37,7 +37,7 @@ class PWM(I2C):
         self.channel = channel
         self.timer = int(channel/4)
         self.bus = smbus.SMBus(1)
-        time.sleep(1)
+        # time.sleep(1)
         self._pulse_width = 0
         self._freq = 50
         self.freq(50)
