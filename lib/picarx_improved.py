@@ -12,6 +12,7 @@ logging.basicConfig(format=logging_format, level=logging.INFO, datefmt ="%H:%M:%
 
 logging.getLogger().setLevel(logging.DEBUG)
 
+
 try:
     sys.path.append(r'/home/hannah/picar-x/lib')
     from servo import Servo 
@@ -24,12 +25,15 @@ try:
     # from ezblock import __reset_mcu__
     reset_mcu()
     time.sleep(0.01)
+    is_hardware = True
 except ImportError:
     print("(Import Error) This computer does not appear to be a PiCar-X system. Shadowing hardware calls with substitute functions.")
     from sim_ezblock import *
+    is_hardware = False
 except ModuleNotFoundError:
     print("(Module Error) This computer does not appear to be a PiCar-X system. Shadowing hardware calls with substitute functions")
     from sim_ezblock import *
+    is_hardware = False
 
 logging.debug("Classes imported.")
 
@@ -72,9 +76,9 @@ class Picarx(object):
             pin.prescaler(self.PRESCALER)
 
         atexit.register(self.stop)
-        self.dir_servo_angle_calibration(2)
+        if is_hardware == True:
+            self.dir_servo_angle_calibration(2)
 
-        logging.debug("Picar object initialized.")
 
     def set_motor_speed(self,motor,speed):
         # global cali_speed_value,cali_dir_value

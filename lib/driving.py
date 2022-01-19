@@ -62,8 +62,49 @@ class MovePicar():
         else:
             print("Side not recognized. Please specify 'left' or 'right' as direction.")
 
+    def drive(self):
+        self.in_drive_mode = True
+        print("Entered driving mode.")
+        while self.in_drive_mode == True:
+            print("Please select a movement option: \n 1:  Parallel park \n 2:  K-turn \n 3:  Straighten wheels \n 4: Exit driving mode")
+            usr_cmd = input("Select movement number: ")
+            # Make sure input is an integer
+            try:
+                usr_cmd = int(usr_cmd)
+            except:
+                usr_cmd = "no"
+
+            # Parse user input
+            if usr_cmd == 1: # Parallel Parking
+                dir = input("Choose a direction to park: \n r: right \n l: left \n")
+                if dir == 'r':
+                    # print("executing ppark right")
+                    self.parallel_park("right")
+                elif dir == 'l':
+                    # print('executing ppark left')
+                    self.parallel_park("left")
+                else:
+                    print("Direction not found. Please type 'r' or 'l'.")
+            elif usr_cmd == 2: # K turn
+                dir = input("Choose a direction to turn: \n r: right \n l: left \n")
+                if dir == 'r':
+                    # print("executing kturn right")
+                    self.k_turn("right")
+                elif dir == 'l':
+                    # print('executing kturn left')
+                    self.k_turn("left")
+                else:
+                    print("Direction not found. Please type 'r' or 'l'.")
+            elif usr_cmd == 3:
+                self.straighten_out()
+            elif usr_cmd == 4:
+                print("Exiting drive mode.")
+                self.in_drive_mode = False
+            else:
+                print("Command not recognized. Please choose from the available options.")
+
 
 if __name__ == "__main__":
     px = Picarx()
     move = MovePicar(px)
-    move.k_turn("left")
+    move.drive()
