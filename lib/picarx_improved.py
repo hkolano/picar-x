@@ -5,6 +5,7 @@ import logging
 from logdecorator import log_on_start , log_on_end , log_on_error
 import atexit
 import sys
+from math import tan, radians
 
 logging_format = '%(asctime)s: %(message)s'
 logging.basicConfig(format=logging_format, level=logging.INFO, datefmt ="%H:%M:%S")
@@ -188,20 +189,41 @@ class Picarx(object):
         current_angle = self.dir_current_angle
         if current_angle != 0:
             abs_current_angle = abs(current_angle)
+            turn_r = 9.8/tan(radians(abs_current_angle)) # turn radius of center of back wheels
+            inside_r = turn_r-5.8 # turn radius of inner wheel
+            outside_r = turn_r+5.8 # turn radius of outer wheel
+            inner_speed_ratio = inside_r/turn_r 
+            outer_speed_ratio = outside_r/turn_r
             # if abs_current_angle >= 0:
-            if abs_current_angle > 40:
-                abs_current_angle = 40
-            power_scale = (100 - abs_current_angle) / 100.0 
-            print("power_scale:",power_scale)
+            
             if (current_angle / abs_current_angle) > 0:
-                self.set_motor_speed(1, speed)
-                self.set_motor_speed(2, -1*speed * power_scale)
+                self.set_motor_speed(1, speed*outer_speed_ratio)
+                self.set_motor_speed(2, -1*speed*inner_speed_ratio)
             else:
-                self.set_motor_speed(1, speed * power_scale)
-                self.set_motor_speed(2, -1*speed )
+                self.set_motor_speed(1, speed*inner_speed_ratio)
+                self.set_motor_speed(2, -1*speed*outer_speed_ratio)
         else:
             self.set_motor_speed(1, speed)
             self.set_motor_speed(2, -1*speed)                  
+
+    # def forward(self,speed):
+    #         current_angle = self.dir_current_angle
+    #         if current_angle != 0:
+    #             abs_current_angle = abs(current_angle)
+    #             # if abs_current_angle >= 0:
+    #             if abs_current_angle > 40:
+    #                 abs_current_angle = 40
+    #             power_scale = (100 - abs_current_angle) / 100.0 
+    #             print("power_scale:",power_scale)
+    #             if (current_angle / abs_current_angle) > 0:
+    #                 self.set_motor_speed(1, speed)
+    #                 self.set_motor_speed(2, -1*speed * power_scale)
+    #             else:
+    #                 self.set_motor_speed(1, speed * power_scale)
+    #                 self.set_motor_speed(2, -1*speed )
+    #         else:
+    #             self.set_motor_speed(1, speed)
+    #             self.set_motor_speed(2, -1*speed)  
 
     def stop(self):
         self.set_motor_speed(1, 0)
@@ -240,9 +262,13 @@ if __name__ == "__main__":
     # Make sure the motors stop when the script is stopped
     atexit.register(px.stop)
 
+    logging.debug("Turning wheels....")
+    px.set_dir_servo_angle(30)
     px.forward(50)
+
     time.sleep(1)
     px.stop()
+    logging.debug("Done.")
     # set_dir_servo_angle(0)
     # time.sleep(1)
     # self.set_motor_speed(1, 1)
