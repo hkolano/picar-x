@@ -18,9 +18,10 @@ try:
     from filedb import fileDB
     from pin import Pin
     from adc import ADC
+    from utils import reset_mcu
     # from ezblock import *
     # from ezblock import __reset_mcu__
-    # __reset_mcu__()
+    reset_mcu()
     time.sleep(0.01)
 except ImportError:
     print("(Import Error) This computer does not appear to be a PiCar-X system. Shadowing hardware calls with substitute functions.")
