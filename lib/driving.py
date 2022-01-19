@@ -47,4 +47,4 @@ class MovePicar():
 if __name__ == "__main__":
     px = Picarx()
     move = MovePicar(px)
-    move.parallel_park("left")
+    move.k_turn("right")
