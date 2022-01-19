@@ -76,6 +76,9 @@ class Picarx(object):
             pin.period(self.PERIOD)
             pin.prescaler(self.PRESCALER)
 
+        atexit.register(self.stop)
+        self.dir_servo_angle_calibration(2)
+
     def set_motor_speed(self,motor,speed):
         # global cali_speed_value,cali_dir_value
         motor -= 1
@@ -265,8 +268,8 @@ if __name__ == "__main__":
     # Initialize PiCar object
     px = Picarx()
     # Make sure the motors stop when the script is stopped
-    atexit.register(px.stop)
-    px.dir_servo_angle_calibration(2) # Calibrated to 2 degrees
+    # atexit.register(px.stop)
+    # px.dir_servo_angle_calibration(2) # Calibrated to 2 degrees
 
     logging.debug("Turning wheels....")
     px.set_dir_servo_angle(0)
