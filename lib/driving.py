@@ -20,6 +20,10 @@ class MovePicar():
         self.car.stop()
         time.sleep(0.1)
 
+    def straighten_out(self):
+        self.car.set_servo_angle(0)
+        time.sleep(0.25)
+
     def parallel_park(self, side):
         self.move("forward", 0, 40, 0.7)
         if side == "right":
