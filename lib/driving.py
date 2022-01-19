@@ -21,7 +21,7 @@ class MovePicar():
         time.sleep(0.1)
 
     def straighten_out(self):
-        self.car.set_servo_angle(0)
+        self.car.set_dir_servo_angle(0)
         time.sleep(0.25)
 
     def parallel_park(self, side):
