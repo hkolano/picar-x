@@ -17,3 +17,25 @@ class Sensing():
         adc_value_list.append(self.S1.read())
         adc_value_list.append(self.S2.read())
         return adc_value_list
+
+class Interpreter():
+
+    def __init__(self, sensor, sensitivity=500, polarity=1):
+        ''' Initialize line interpreter. 
+        Inputs:
+        sensor: the Sensing object
+        sensitivity: how different light & dark readings are
+        polarity: 1 - line is darker; 2 - line is lighter'''
+        self.sensor = sensor
+        self.sensitivity = sensitivity
+        self.polarity = polarity
+
+    def calibrate(self):
+        input("Place the sensor over the floor.")
+        floor_data = self.sensor.get_grayscale_data()
+        input("Place the sensor over the line.")
+        line_data = self.sensor.get_grayscale_data()
+        input("Place the sensor centered on the line.")
+        middle_data = self.sensor.get_grayscale_data()
+        print("floor: {} \n line: {} \n middle: {} \n")
+
