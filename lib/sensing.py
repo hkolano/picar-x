@@ -37,5 +37,5 @@ class Interpreter():
         line_data = self.sensor.get_grayscale_data()
         input("Place the sensor centered on the line.")
         middle_data = self.sensor.get_grayscale_data()
-        print("floor: {} \n line: {} \n middle: {} \n", floor_data, line_data, middle_data)
+        print("floor: ", floor_data, "\n line: ", line_data, "\n middle: ", middle_data)
 
