@@ -110,6 +110,8 @@ class Interpreter():
             elif closeness_vector[2] > 1:
                 pos = -1.0
                 print("VERY LEFT")
+            else:
+                print("HELP! I'VE LOST THE LINE!!!")
         else:
             print("wtf how did you get here? vec is ", closeness_vector)
 
