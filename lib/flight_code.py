@@ -17,7 +17,7 @@ class Flight():
 
     def follow_line(self):
         x = 0
-        while x < 50:
+        while True:
             data = self.sense.get_grayscale_data()
             print(data)
             loc = self.int.interpret_location(data)
@@ -25,7 +25,7 @@ class Flight():
             str_angle = self.ctlr.steer(loc)
             self.move.move(angle=str_angle, is_cont=True)
             x += 1
-        self.car.stop()
+        # self.car.stop()
 
 
 if __name__ == "__main__":
