@@ -16,13 +16,16 @@ class Flight():
         self.int.load_calibration('headphonecase.pkl')
 
     def follow_line(self):
-        while True:
+        x = 0
+        while x > 50:
             data = self.sense.get_grayscale_data()
             print(data)
             loc = self.int.interpret_location(data)
             print(loc)
             str_angle = self.ctlr.steer(loc)
             self.move.move(angle=str_angle, is_cont=True)
+            x += 1
+        self.car.stop()
 
 
 if __name__ == "__main__":
