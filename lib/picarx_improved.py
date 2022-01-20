@@ -75,12 +75,9 @@ class Picarx(object):
             pin.period(self.PERIOD)
             pin.prescaler(self.PRESCALER)
 
-        atexit.register(self.stop)
+        atexit.register(self.cleanup)
         if is_hardware == True:
             self.dir_servo_angle_calibration(2)
-
-    def scream_stop(self):
-        print("I'M STOPPING NOW!!!!!")
 
     def set_motor_speed(self,motor,speed):
         # global cali_speed_value,cali_dir_value
@@ -223,6 +220,7 @@ class Picarx(object):
         print("Reached end of stop code")
 
     def cleanup(self):
+        time.sleep(0.2)
         self.stop()
 
     def Get_distance(self):
