@@ -220,7 +220,7 @@ class Picarx(object):
         print("Reached end of stop code")
 
     def cleanup(self):
-        time.sleep(0.2)
+        time.sleep(0.5)
         self.stop()
 
     def Get_distance(self):

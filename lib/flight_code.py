@@ -19,11 +19,14 @@ class Flight():
         x = 0
         while True:
             data = self.sense.get_grayscale_data()
-            print(data)
+            # print(data)
             loc = self.int.interpret_location(data)
-            print(loc)
+            # print(loc)
             str_angle = self.ctlr.steer(loc)
-            self.move.move(angle=str_angle, is_cont=True)
+            if abs(str_angle) > 20:
+                self.move.move(angle=str_angle, speed=30, is_cont=True)
+            else:
+                self.move.move(angle=str_angle, is_cont=True)
             x += 1
         # self.car.stop()
 
