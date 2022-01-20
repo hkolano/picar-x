@@ -9,7 +9,7 @@ class MovePicar():
     def __init__(self, px):
         self.car = px
         
-    def move(self, dir="forward", angle=0, speed=50, duration=1):
+    def move(self, dir="forward", angle=0, speed=50, duration=1, is_cont=False):
         ''' 
         Command the car to move for a discrete amount of time. 
         Inputs:
@@ -17,18 +17,21 @@ class MovePicar():
         angle: >0 is right, <0 is left. Max 40 degrees.
         speed: power to pass to the car.
         duration: length of time for move, in seconds. 
+        is_cont: "is continuous" -- True for continuous motion, False for discrete motions. 
         '''
         self.car.set_dir_servo_angle(angle)
-        time.sleep(0.25)
+        if not is_cont:
+            time.sleep(0.25)
         if dir == "forward":
             self.car.forward(speed)
         elif dir == "backward":
             self.car.backward(speed)
         else:
             print("Direction not recognized. Please input 'forward' or 'backward' as direction.")
-        time.sleep(duration)
-        self.car.stop()
-        time.sleep(0.1)
+        if not is_cont:
+            time.sleep(duration)
+            self.car.stop()
+            time.sleep(0.1)
 
     def straighten_out(self):
         ''' Straightens the car's wheels. '''
