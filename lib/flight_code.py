@@ -24,7 +24,7 @@ class Flight():
             # print(loc)
             str_angle = self.ctlr.steer(loc)
             if abs(str_angle) > 20:
-                self.move.move(angle=str_angle, speed=30, is_cont=True)
+                self.move.move(angle=str_angle, speed=25, is_cont=True)
             else:
                 self.move.move(angle=str_angle, is_cont=True)
             x += 1
