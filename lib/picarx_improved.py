@@ -75,7 +75,7 @@ class Picarx(object):
             pin.period(self.PERIOD)
             pin.prescaler(self.PRESCALER)
 
-        atexit.register(self.cleanup)
+        atexit.register(self.stop)
         if is_hardware == True:
             self.dir_servo_angle_calibration(2)
 
