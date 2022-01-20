@@ -137,5 +137,5 @@ class Controller():
         '''Input:
         location: value on [-1 1] (positive: robot too far right) 
         describing location of robot wrt the line'''
-        self.car.set_dir_servo_angle(location*self.scaling)
-        return location*self.scaling
+        self.car.set_dir_servo_angle(location*self.scaling*-1)
+        return location*self.scaling*-1
