@@ -75,11 +75,11 @@ class Picarx(object):
             pin.period(self.PERIOD)
             pin.prescaler(self.PRESCALER)
 
-        atexit.register(self.scream_stop)
+        atexit.register(self.stop)
         if is_hardware == True:
             self.dir_servo_angle_calibration(2)
 
-    def scream_stop():
+    def scream_stop(self):
         print("I'M STOPPING NOW!!!!!")
 
     def set_motor_speed(self,motor,speed):
@@ -220,6 +220,7 @@ class Picarx(object):
     def stop(self):
         self.set_motor_speed(1, 0)
         self.set_motor_speed(2, 0)
+        print("Reached end of stop code")
 
     def cleanup(self):
         self.stop()
