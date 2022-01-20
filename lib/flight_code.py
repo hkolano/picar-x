@@ -17,7 +17,7 @@ class Flight():
 
     def follow_line(self):
         x = 0
-        while x > 50:
+        while x < 50:
             data = self.sense.get_grayscale_data()
             print(data)
             loc = self.int.interpret_location(data)
