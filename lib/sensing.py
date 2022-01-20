@@ -1,6 +1,7 @@
 from fileinput import close
 from statistics import mean
 from picarx_improved import Picarx
+import pickle
 
 class Sensing():
 
@@ -112,3 +113,29 @@ class Interpreter():
             print("wtf how did you get here? vec is ", closeness_vector)
 
         return pos
+
+    def save_calibration(self, filename):
+        # Open a file and use dump()
+        with open(filename, 'wb') as file:
+            # A new file will be created
+            pickle.dump([self.polarity, self.thresh_close, self.thresh_far], file)
+
+    def load_calibration(self, filename):
+        with open(filename, 'rb') as file:
+            [self.polarity, self.thresh_close, self.thresh_far] = pickle.load(file)
+            print("Light calibration loaded: \n Polarity: ", self.polarity, "\n Far Threshold: ", self.thresh_far, "\n Close Threshold: ", self.thresh_close)
+
+class Controller():
+
+    def __init__(self, car, scaling_factor=20):
+        ''' scaling_factor: multiply location [-1 1] by s.f. to get steering angle (max 40)
+        car: picarx object '''
+        self.scaling = scaling_factor
+        self.car = car
+
+    def steer(self, location):
+        '''Input:
+        location: value on [-1 1] (positive: robot too far right) 
+        describing location of robot wrt the line'''
+        self.car.set_dir_servo_angle(location*self.scaling)
+        return location*self.scaling
