@@ -46,6 +46,7 @@ class Interpreter():
         line_data = self.sensor.get_grayscale_data()
         line_avg = mean(line_data)
         print("floor: ", floor_data, "\n line: ", line_data)
+        input("Place the robot at the start of the track and hit enter.")
 
         # Define polarity based on which had more light
         light_diff = line_avg - floor_avg

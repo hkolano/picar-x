@@ -10,10 +10,10 @@ class Flight():
         self.move = MovePicar(self.car)
         self.sense = Sensing(self.car)
         self.int = Interpreter(self.sense)
-        self.ctlr = Controller(self.car)
+        self.ctlr = Controller(self.car, scaling_factor=30)
 
-        self.int.calibrate()
-        self.int.save_calibration('kitchen_floor_day.pkl')
+        # self.int.calibrate()
+        self.int.load_calibration('kitchen_floor_day.pkl')
 
     def follow_line(self):
         x = 0
