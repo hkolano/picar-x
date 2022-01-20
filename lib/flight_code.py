@@ -3,20 +3,28 @@ from driving import MovePicar
 from sensing import Sensing, Interpreter, Controller
 import time
 
+class Flight():
+
+    def __init__(self):
+        self.car = Picarx()
+        self.move = MovePicar(self.car)
+        self.sense = Sensing(self.car)
+        self.int = Interpreter(self.sense)
+        self.ctlr = Controller(self.car)
+
+        # self.int.calibrate()
+        self.int.load_calibration('headphonecase.pkl')
+
+    def follow_line(self):
+        while True:
+            data = self.sense.get_grayscale_data()
+            print(data)
+            loc = self.int.interpret_location(data)
+            print(loc)
+            str_angle = self.ctlr.steer(loc)
+            self.move.move(angle=str_angle, is_cont=True)
+
+
 if __name__ == "__main__":
-    px = Picarx()
-    move = MovePicar(px)
-    sens = Sensing(px)
-    int = Interpreter(sens)
-    ctlr = Controller(px)
-
-    int.calibrate()
-    int.save_calibration('headphonecase.pxl')
-
-    while True:
-        data = sens.get_grayscale_data()
-        print(data)
-        loc = int.interpret_location(data)
-        print(loc)
-        ctlr.steer(loc)
-        time.sleep(.5)
+    fl = Flight()
+    fl.follow_line()
