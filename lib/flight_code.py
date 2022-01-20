@@ -12,8 +12,8 @@ class Flight():
         self.int = Interpreter(self.sense)
         self.ctlr = Controller(self.car)
 
-        # self.int.calibrate()
-        self.int.load_calibration('headphonecase.pkl')
+        self.int.calibrate()
+        self.int.save_calibration('kitchen_floor_day.pkl')
 
     def follow_line(self):
         x = 0
