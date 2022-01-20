@@ -29,6 +29,7 @@ class MovePicar():
         else:
             print("Direction not recognized. Please input 'forward' or 'backward' as direction.")
         if not is_cont:
+            # If a discrete motion, continue for the duration and then stop.
             time.sleep(duration)
             self.car.stop()
             time.sleep(0.1)
@@ -66,6 +67,7 @@ class MovePicar():
             print("Side not recognized. Please specify 'left' or 'right' as direction.")
 
     def drive(self):
+        ''' Allows user to command parallel parking or k-turns in a loop. '''
         self.in_drive_mode = True
         print("Entered driving mode.")
         while self.in_drive_mode == True:

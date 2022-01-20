@@ -4,6 +4,7 @@ from sensing import Sensing, Interpreter, Controller
 import time
 
 class Flight():
+    '''Combines classes to execute high-level functions, such as line following. '''
 
     def __init__(self):
         self.car = Picarx()
@@ -16,7 +17,6 @@ class Flight():
         self.int.load_calibration('kitchen_floor_day.pkl')
 
     def follow_line(self):
-        x = 0
         while True:
             data = self.sense.get_grayscale_data()
             # print(data)
@@ -27,8 +27,6 @@ class Flight():
                 self.move.move(angle=str_angle, speed=25, is_cont=True)
             else:
                 self.move.move(angle=str_angle, is_cont=True)
-            x += 1
-        # self.car.stop()
 
 
 if __name__ == "__main__":
