@@ -1,5 +1,3 @@
-from cmath import log
-from zmq import Message
 from picarx_improved import Picarx
 from driving import MovePicar
 from sensing import Sensing, Interpreter, Controller
