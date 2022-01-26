@@ -2,6 +2,8 @@ from fileinput import close
 from statistics import mean
 from picarx_improved import Picarx
 import pickle
+import logging
+from logdecorator import log_on_start , log_on_end , log_on_error
 
 class Sensing():
 
@@ -13,6 +15,7 @@ class Sensing():
         self.S1 = car.S1
         self.S2 = car.S2
 
+    @log_on_start(logging.DEBUG, "Reading sensor values.")
     def get_grayscale_data(self):
         ''' Read the 3 grayscale values and return them as a list '''
         adc_value_list = []
@@ -67,6 +70,7 @@ class Interpreter():
         print("polarity is: ", self.polarity)
         print("Close threshold: ", self.thresh_close, "Far threshold: ", self.thresh_far)
         
+    @log_on_start(logging.DEBUG, "Interpreting grayscale data...")
     def interpret_location(self, gray_data):
         ''' Interprets grayscale data and returns a guess as to where
          the robot is in reference to the line.
@@ -82,6 +86,14 @@ class Interpreter():
                     closeness_vector.append(2)
                 else:
                     closeness_vector.append(3)
+        else:
+            for val in gray_data:
+                if val > self.thresh_far:
+                    closeness_vector.append(1)
+                elif self.thresh_far > val > self.thresh_close:
+                    closeness_vector.append(2)
+                else:
+                    closeness_vector.append(3)
         
         # if center sensor is over line
         if closeness_vector[1] == 3:
@@ -90,10 +102,10 @@ class Interpreter():
                 print("Centered!")
             elif closeness_vector[0] > closeness_vector[2]:
                 pos = 0.33
-                print("slightly right...")
+                print("Slightly right...")
             elif closeness_vector[0] < closeness_vector[2]:
                 pos = -0.33
-                print("slightly left...")
+                print("Slightly left...")
         # if center sensor is slightly off the line
         elif closeness_vector[1] == 2:
             if closeness_vector[0] > 1:
