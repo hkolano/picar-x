@@ -20,7 +20,7 @@ class Flight():
         self.ctlr = Controller(self.car, scaling_factor=40)
 
         self.int.calibrate()
-        # self.int.load_calibration('kitchen_floor_day.pkl')
+        self.int.save_calibration('table_afternoon.pkl')
 
     def follow_line(self):
         while True:
