@@ -19,8 +19,8 @@ class Flight():
         self.int = Interpreter(self.sense)
         self.ctlr = Controller(self.car, scaling_factor=40)
 
-        self.int.calibrate()
-        self.int.save_calibration('table_afternoon.pkl')
+        # self.int.calibrate()
+        self.int.load_calibration('table_afternoon.pkl')
 
     def follow_line(self):
         while True:
@@ -69,9 +69,12 @@ if __name__ == "__main__":
     sensor_delay = 0.01
     interpret_delay = 0.01
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+    logging.getLogger().setLevel(logging.INFO)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay)
         eInterpreter = executor.submit(fl.consume_sens_produce_loc, grayscale_bus, loc_bus, interpret_delay)
+        eMover = executor.submit(fl.consume_loc_and_move(loc_bus, interpret_delay))
 
     eSensor.result()
     # sys.exit(1)
