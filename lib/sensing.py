@@ -58,6 +58,9 @@ class Interpreter():
         else:
             self.polarity = -1
 
+        if abs(light_diff) < 50:
+            print("WARNING: Floor and line are very close in value.")
+
         # Define thresholds based on difference
         one_third_range = abs(light_diff)/3
         if self.polarity == 1:
