@@ -57,7 +57,7 @@ class Flight():
         start_time = time.time()
         while time.time() - start_time < runtime:
             loc = read_bus.read_msg()
-            logging.DEBUG("Location: ", loc)
+            logging.debug("Location: ", loc)
             str_angle = self.ctlr.steer(loc)
             if abs(str_angle) > 20:
                 self.move.move(angle=str_angle, speed=25, is_cont=True)
