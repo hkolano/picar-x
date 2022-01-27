@@ -78,7 +78,7 @@ if __name__ == "__main__":
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay, runtime)
         eInterpreter = executor.submit(fl.consume_sens_produce_loc, grayscale_bus, loc_bus, interpret_delay, runtime)
-        eMover = executor.submit(fl.consume_loc_and_move(loc_bus, interpret_delay, runtime))
+        eMover = executor.submit(fl.consume_loc_and_move, loc_bus, interpret_delay, runtime)
 
     eSensor.result()
     eInterpreter.result()
