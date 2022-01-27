@@ -71,9 +71,9 @@ if __name__ == "__main__":
     loc_bus = MessageBus()
     sensor_delay = 0.01
     interpret_delay = 0.01
-    runtime = 5
+    runtime = 2
 
-    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger().setLevel(logging.DEBUG)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay, runtime)
