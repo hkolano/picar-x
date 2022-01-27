@@ -151,6 +151,7 @@ class Controller():
         self.scaling = scaling_factor
         self.car = car
 
+    @log_on_start("Steering!")
     def steer(self, location):
         '''Input:
         location: value on [-1 1] (positive: robot too far right) 

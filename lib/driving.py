@@ -9,6 +9,7 @@ class MovePicar():
     def __init__(self, px):
         self.car = px
         
+    @log_on_error(logging.INFO, "error in MOVE function")
     def move(self, dir="forward", angle=0, speed=50, duration=1, is_cont=False):
         ''' 
         Command the car to move for a discrete amount of time. 
