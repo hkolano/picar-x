@@ -101,7 +101,7 @@ class Interpreter():
         # if center sensor is over line
         if closeness_vector[1] == 3:
             if closeness_vector[0] == closeness_vector[2]:
-                pos = 0
+                pos = 0.0
                 print("Centered!")
             elif closeness_vector[0] > closeness_vector[2]:
                 pos = 0.33

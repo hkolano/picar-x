@@ -4,7 +4,7 @@ class MessageBus():
 
     def __init__(self):
         self.lock = rwlock.RWLockWriteD()
-        self.message = []
+        self.message = 0
 
     def write_msg(self, msg):
         with self.lock.gen_wlock():

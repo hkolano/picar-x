@@ -57,7 +57,6 @@ class Flight():
         start_time = time.time()
         while time.time() - start_time < runtime:
             loc = read_bus.read_msg()
-            logging.debug("Location: ", loc)
             str_angle = self.ctlr.steer(loc)
             if abs(str_angle) > 20:
                 self.move.move(angle=str_angle, speed=25, is_cont=True)
@@ -72,9 +71,9 @@ if __name__ == "__main__":
     loc_bus = MessageBus()
     sensor_delay = 0.01
     interpret_delay = 0.01
-    runtime = 2
+    runtime = .5
 
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.INFO)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay, runtime)
@@ -84,4 +83,6 @@ if __name__ == "__main__":
     eSensor.result()
     eInterpreter.result()
     eMover.result()
+
+    # print(type(loc_bus.read_msg()))
     # sys.exit(1)
