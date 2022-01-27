@@ -52,6 +52,7 @@ class Flight():
             time.sleep(delay_time)
 
     @log_on_start(logging.INFO, "Starting mover sub")
+    @log_on_error(logging.INFO, "problem in consume and move")
     def consume_loc_and_move(self, read_bus, delay_time, runtime):
         start_time = time.time()
         while time.time() - start_time < runtime:
