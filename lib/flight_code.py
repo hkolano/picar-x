@@ -7,7 +7,6 @@ from messagebus import MessageBus
 import logging
 from logdecorator import log_on_start , log_on_end , log_on_error
 from readerwriterlock import rwlock
-import sys
 
 class Flight():
     '''Combines classes to execute high-level functions, such as line following. '''
@@ -19,8 +18,11 @@ class Flight():
         self.int = Interpreter(self.sense)
         self.ctlr = Controller(self.car, scaling_factor=40)
 
-        # self.int.calibrate()
-        self.int.load_calibration('table_afternoon.pkl')
+        self.int.calibrate()
+
+        # Save or load calibration data from a pickle file
+        self.int.save_calibration('new_cal_data.pkl')
+        # self.int.load_calibration('new_cal_data.pkl')
 
     def follow_line(self):
         while True:
@@ -52,7 +54,6 @@ class Flight():
             time.sleep(delay_time)
 
     @log_on_start(logging.INFO, "Starting mover sub")
-    @log_on_error(logging.INFO, "problem in consume and move")
     def consume_loc_and_move(self, read_bus, delay_time, runtime):
         start_time = time.time()
         while time.time() - start_time < runtime:
@@ -71,6 +72,9 @@ if __name__ == "__main__":
     loc_bus = MessageBus()
     sensor_delay = 0.01
     interpret_delay = 0.01
+    move_delay = 0.01
+
+    # Time until timeout (I had trouble stopping the code from running with concurrent going)
     runtime = .5
 
     logging.getLogger().setLevel(logging.INFO)
@@ -78,11 +82,8 @@ if __name__ == "__main__":
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay, runtime)
         eInterpreter = executor.submit(fl.consume_sens_produce_loc, grayscale_bus, loc_bus, interpret_delay, runtime)
-        eMover = executor.submit(fl.consume_loc_and_move, loc_bus, interpret_delay, runtime)
+        eMover = executor.submit(fl.consume_loc_and_move, loc_bus, move_delay, runtime)
 
     eSensor.result()
     eInterpreter.result()
     eMover.result()
-
-    # print(type(loc_bus.read_msg()))
-    # sys.exit(1)
