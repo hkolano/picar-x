@@ -80,4 +80,6 @@ if __name__ == "__main__":
         eMover = executor.submit(fl.consume_loc_and_move(loc_bus, interpret_delay, runtime))
 
     eSensor.result()
+    eInterpreter.result()
+    eMover.result()
     # sys.exit(1)
