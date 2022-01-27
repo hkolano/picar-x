@@ -34,7 +34,7 @@ class Flight():
             else:
                 self.move.move(angle=str_angle, is_cont=True)
 
-    @log_on_start(logging.DEBUG, "Starting sensor publisher")
+    @log_on_start(logging.INFO, "Starting sensor publisher")
     def produce_sensor_data(self, bus, delay_time, runtime):
         start_time = time.time()
         while time.time() - start_time < runtime:
@@ -42,7 +42,7 @@ class Flight():
             bus.write_msg(data)
             time.sleep(delay_time)
 
-    @log_on_start(logging.DEBUG, "Starting interpreter sub/pub")
+    @log_on_start(logging.INFO, "Starting interpreter sub/pub")
     def consume_sens_produce_loc(self, read_bus, write_bus, delay_time, runtime):
         start_time = time.time()
         while time.time() - start_time < runtime:
@@ -51,7 +51,7 @@ class Flight():
             write_bus.write_msg(loc)
             time.sleep(delay_time)
 
-    @log_on_start(logging.DEBUG, "Starting mover sub")
+    @log_on_start(logging.INFO, "Starting mover sub")
     def consume_loc_and_move(self, read_bus, delay_time, runtime):
         start_time = time.time()
         while time.time() - start_time < runtime:
