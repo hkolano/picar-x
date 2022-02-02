@@ -31,10 +31,10 @@ class Flight():
         self.int_wall = InterpreterUltrasonic()
         self.ctlr = Controller(self.car, scaling_factor=40)
 
-        # self.int.calibrate()
+        self.int.calibrate()
 
         # Save or load calibration data from a pickle file
-        # self.int.save_calibration('new_cal_data.pkl')
+        self.int.save_calibration('new_cal_data.pkl')
         # self.int.load_calibration('new_cal_data.pkl')
 
     def follow_line(self):
