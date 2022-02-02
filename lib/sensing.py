@@ -32,7 +32,7 @@ class SensingUltrasonic():
         input car: Picarx object'''
         self.car = car 
         self.trig_pin = car.ultrasonic_trig_pin
-        self.echo_pin = car.ultrasonic_trig_pin 
+        self.echo_pin = car.ultrasonic_echo_pin 
         self.sonar = Ultrasonic(self.trig_pin, self.echo_pin)
 
     @log_on_start(logging.DEBUG, "Reading ultrasonic values.")
