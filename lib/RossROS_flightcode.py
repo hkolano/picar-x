@@ -45,13 +45,16 @@ class Flight():
             # print(loc)
             self.move_for_line_following(loc)
 
-    def move_for_line_following(self, loc):
-        '''Moves the vehicle based on the steering; steers slower on sharper turns.'''
+    def move_for_line_following(self, loc, spd_scale=1):
+        '''Moves the vehicle based on the location of the line; 
+        steers slower on sharper turns.'''
+        spd = 50*spd_scale
+        logging.info(f"Setting speed to {spd}")
         str_angle = self.ctlr.steer(loc)
-        if abs(str_angle) > 20:
-            self.move.move(angle=str_angle, speed=25, is_cont=True)
-        else:
-            self.move.move(angle=str_angle, is_cont=True)
+        # if abs(str_angle) > 20:
+        #     self.move.move(angle=str_angle, speed=spd/2, is_cont=True)
+        # else:
+        #     self.move.move(angle=str_angle, speed=spd, is_cont=True)
 
 
 if __name__ == "__main__":
@@ -63,22 +66,21 @@ if __name__ == "__main__":
     timer_bus = rossros.Bus(name="timer")
     sensor_delay = 0.05
     interpret_delay = 0.05
-    move_delay = 0.01
+    move_delay = 0.05
 
     # Time until timeout (I had trouble stopping the code from running with concurrent going)
     runtime = .5
 
     logging.getLogger().setLevel(logging.INFO)
 
-    sensor_producer = rossros.Producer(fl.sense.get_grayscale_data, grayscale_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="grayscale_producer")
-    sensultra_prod = rossros.Producer(fl.sense_ultra.get_ultrasonic_data, ultra_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="ultrasonic_producer")
-    interpreter_consumerproducer = rossros.ConsumerProducer(fl.int.interpret_location, (grayscale_bus,), (loc_bus,), delay=interpret_delay, termination_busses=(timer_bus,), name="interpreter_consprod")
+    gray_prod = rossros.Producer(fl.sense.get_grayscale_data, grayscale_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="grayscale_producer")
+    ultra_prod = rossros.Producer(fl.sense_ultra.get_ultrasonic_data, ultra_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="ultrasonic_producer")
+    int_gray_consprod = rossros.ConsumerProducer(fl.int.interpret_location, (grayscale_bus,), (loc_bus,), delay=interpret_delay, termination_busses=(timer_bus,), name="interpreter_consprod")
     int_ultra_consprod = rossros.ConsumerProducer(fl.int_wall.interpret_distance, (ultra_bus,), (wall_bus,), delay=interpret_delay, termination_busses=(timer_bus,), name="wallint_consprod")
-    controller_consumer = rossros.Consumer(fl.move_for_line_following, (loc_bus,), delay=move_delay, termination_busses=(timer_bus,), name="controller_consumer")
-    timer = rossros.Timer((timer_bus,), duration=5, delay=0.1, termination_busses=(timer_bus,), name="master timer")
+    controller_consumer = rossros.Consumer(fl.move_for_line_following, (loc_bus, wall_bus), delay=move_delay, termination_busses=(timer_bus,), name="controller_consumer")
+    timer = rossros.Timer((timer_bus,), duration=runtime, delay=0.1, termination_busses=(timer_bus,), name="master timer")
 
-    # prod_cons_list = [timer, sensor_producer, sensultra_prod, interpreter_consumerproducer] #, controller_consumer]
-    prod_cons_list = [timer, sensultra_prod, int_ultra_consprod]
+    prod_cons_list = [gray_prod, ultra_prod, int_gray_consprod, int_ultra_consprod, controller_consumer, timer]
     rossros.runConcurrently(prod_cons_list)
     # with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
     #     eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay, runtime)
