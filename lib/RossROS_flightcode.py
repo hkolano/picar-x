@@ -17,6 +17,7 @@ sys.path.append(_path1)
 sys.path.append(_path2)
 
 import rossros
+# run git submodule init and git submodule update if RossROS has no files in it
 
 class Flight():
     '''Combines classes to execute high-level functions, such as line following. '''
@@ -71,9 +72,10 @@ if __name__ == "__main__":
     sensultra_prod = rossros.Producer(fl.sense_ultra.get_ultrasonic_data, ultra_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="ultrasonic_producer")
     interpreter_consumerproducer = rossros.ConsumerProducer(fl.int.interpret_location, (grayscale_bus,), (loc_bus,), delay=interpret_delay, termination_busses=(timer_bus,), name="interpreter_consprod")
     controller_consumer = rossros.Consumer(fl.move_for_line_following, (loc_bus,), delay=move_delay, termination_busses=(timer_bus,), name="controller_consumer")
-    timer = rossros.Timer((timer_bus,), duration=0.5, delay=0.1, termination_busses=(timer_bus,), name="master timer")
+    timer = rossros.Timer((timer_bus,), duration=5, delay=0.1, termination_busses=(timer_bus,), name="master timer")
 
-    prod_cons_list = [timer, sensor_producer, sensultra_prod, interpreter_consumerproducer] #, controller_consumer]
+    # prod_cons_list = [timer, sensor_producer, sensultra_prod, interpreter_consumerproducer] #, controller_consumer]
+    prod_cons_list = [timer, sensultra_prod]
     rossros.runConcurrently(prod_cons_list)
     # with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
     #     eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay, runtime)
