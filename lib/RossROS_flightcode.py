@@ -1,7 +1,7 @@
 # from lib.sensing import InterpreterGrayscale, SensingUltrasonic
 from picarx_improved import Picarx
 from driving import MovePicar
-from sensing import SensingGrayscale, SensingUltrasonic, InterpreterGrayscale, Controller
+from sensing import * #SensingGrayscale, SensingUltrasonic, InterpreterGrayscale, Controller
 import time
 import concurrent.futures
 from messagebus import MessageBus
@@ -28,6 +28,7 @@ class Flight():
         self.sense = SensingGrayscale(self.car)
         self.sense_ultra = SensingUltrasonic(self.car)
         self.int = InterpreterGrayscale(self.sense)
+        self.int_wall = InterpreterUltrasonic()
         self.ctlr = Controller(self.car, scaling_factor=40)
 
         # self.int.calibrate()
@@ -58,9 +59,10 @@ if __name__ == "__main__":
     grayscale_bus = rossros.Bus(name="grayscale")
     ultra_bus = rossros.Bus(name="ultrasonic")
     loc_bus = rossros.Bus(name="location")
+    wall_bus = rossros.Bus(name="wallsensing")
     timer_bus = rossros.Bus(name="timer")
-    sensor_delay = 0.01
-    interpret_delay = 0.01
+    sensor_delay = 0.05
+    interpret_delay = 0.05
     move_delay = 0.01
 
     # Time until timeout (I had trouble stopping the code from running with concurrent going)
@@ -71,11 +73,12 @@ if __name__ == "__main__":
     sensor_producer = rossros.Producer(fl.sense.get_grayscale_data, grayscale_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="grayscale_producer")
     sensultra_prod = rossros.Producer(fl.sense_ultra.get_ultrasonic_data, ultra_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="ultrasonic_producer")
     interpreter_consumerproducer = rossros.ConsumerProducer(fl.int.interpret_location, (grayscale_bus,), (loc_bus,), delay=interpret_delay, termination_busses=(timer_bus,), name="interpreter_consprod")
+    int_ultra_consprod = rossros.ConsumerProducer(fl.int_wall.interpret_distance, (ultra_bus,), (wall_bus,), termination_busses=(timer_bus,), name="wallint_consprod")
     controller_consumer = rossros.Consumer(fl.move_for_line_following, (loc_bus,), delay=move_delay, termination_busses=(timer_bus,), name="controller_consumer")
     timer = rossros.Timer((timer_bus,), duration=5, delay=0.1, termination_busses=(timer_bus,), name="master timer")
 
     # prod_cons_list = [timer, sensor_producer, sensultra_prod, interpreter_consumerproducer] #, controller_consumer]
-    prod_cons_list = [timer, sensultra_prod]
+    prod_cons_list = [timer, sensultra_prod, int_ultra_consprod]
     rossros.runConcurrently(prod_cons_list)
     # with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
     #     eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay, runtime)

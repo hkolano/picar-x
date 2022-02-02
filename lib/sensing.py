@@ -164,6 +164,27 @@ class InterpreterGrayscale():
             [self.polarity, self.thresh_close, self.thresh_far] = pickle.load(file)
             print("Light calibration loaded: \n Polarity: ", self.polarity, "\n Far Threshold: ", self.thresh_far, "\n Close Threshold: ", self.thresh_close)
 
+class InterpreterUltrasonic():
+
+    def __init__(self, stop_dist=15, slow_dist=30):
+        self.stop_threshold = stop_dist
+        self.slow_threshold = slow_dist 
+
+    def interpret_distance(self, dist):
+        '''Returns 0 if should stop, 1 if it's fine, and a number between 0 and 1 to indicate how much to slow down'''
+        if dist < self.stop_threshold:
+            logging.info("Too close to wall! Stopping!")
+            return 0
+        elif dist > self.slow_threshold:
+            logging.info("No wall nearby; continuing")
+            return 1
+        else:
+            slowing_range = self.slow_threshold - self.stop_threshold
+            prop = (dist - self.stop_threshold)/slowing_range
+            logging.info(f"Getting close... setting speed to {prop}%")
+            return prop
+
+
 class Controller():
 
     def __init__(self, car, scaling_factor=20):
