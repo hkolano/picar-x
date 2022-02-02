@@ -5,7 +5,7 @@ import pickle
 import logging
 from logdecorator import log_on_start , log_on_end , log_on_error
 
-class Sensing():
+class SensingGrayscale():
 
     def __init__(self, car):
         ''' Initialize sensor suite
@@ -23,6 +23,13 @@ class Sensing():
         adc_value_list.append(self.S1.read())
         adc_value_list.append(self.S2.read())
         return adc_value_list
+
+class SensingUltrasonic():
+
+    def __init__(self, car):
+        '''Initialize ultrasonic sensor
+        input car: Picarx object'''
+        self.car = car 
 
 class Interpreter():
 
