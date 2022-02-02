@@ -4,6 +4,7 @@ from picarx_improved import Picarx
 import pickle
 import logging
 from logdecorator import log_on_start , log_on_end , log_on_error
+from ultrasonic import Ultrasonic
 
 class SensingGrayscale():
 
@@ -30,8 +31,21 @@ class SensingUltrasonic():
         '''Initialize ultrasonic sensor
         input car: Picarx object'''
         self.car = car 
+        self.trig_pin = car.ultrasonic_trig_pin
+        self.echo_pin = car.ultrasonic_trig_pin 
+        self.sonar = Ultrasonic(self.trig_pin, self.echo_pin)
 
-class Interpreter():
+    @log_on_start(logging.DEBUG, "Reading ultrasonic values.")
+    def get_ultrasonic_data(self):
+        '''Read the ultrasonic sensor and return the distance in cm'''
+        try:
+            distance = self.sonar.read()
+            logging.info(f"Sensor reading: {distance}")
+            return distance
+        except:
+            logging.info("No ultrasonic sensor to read.")
+
+class InterpreterGrayscale():
 
     def __init__(self, sensor, polarity=1, thresh_close=1000, thresh_far = 600):
         ''' Initialize line interpreter. 

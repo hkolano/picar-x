@@ -64,6 +64,9 @@ class Picarx(object):
         self.S1 = ADC('A1')
         self.S2 = ADC('A2')
 
+        self.ultrasonic_trig_pin = Pin("D2")
+        self.ultrasonic_echo_pin = Pin("D3")
+
         self.motor_direction_pins = [self.left_rear_dir_pin, self.right_rear_dir_pin]
         self.motor_speed_pins = [self.left_rear_pwm_pin, self.right_rear_pwm_pin]
         self.cali_dir_value = self.config_flie.get("picarx_dir_motor", default_value="[1,1]")

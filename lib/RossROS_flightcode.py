@@ -1,6 +1,7 @@
+# from lib.sensing import InterpreterGrayscale, SensingUltrasonic
 from picarx_improved import Picarx
 from driving import MovePicar
-from sensing import SensingGrayscale, Interpreter, Controller
+from sensing import SensingGrayscale, SensingUltrasonic, InterpreterGrayscale, Controller
 import time
 import concurrent.futures
 from messagebus import MessageBus
@@ -24,7 +25,8 @@ class Flight():
         self.car = Picarx()
         self.move = MovePicar(self.car)
         self.sense = SensingGrayscale(self.car)
-        self.int = Interpreter(self.sense)
+        self.sense_ultra = SensingUltrasonic(self.car)
+        self.int = InterpreterGrayscale(self.sense)
         self.ctlr = Controller(self.car, scaling_factor=40)
 
         # self.int.calibrate()
@@ -39,11 +41,7 @@ class Flight():
             # print(data)
             loc = self.int.interpret_location(data)
             # print(loc)
-            str_angle = self.ctlr.steer(loc)
-            if abs(str_angle) > 5:
-                self.move.move(angle=str_angle, speed=25, is_cont=True)
-            else:
-                self.move.move(angle=str_angle, is_cont=True)
+            self.move_for_line_following(loc)
 
     def move_for_line_following(self, loc):
         '''Moves the vehicle based on the steering; steers slower on sharper turns.'''
@@ -54,35 +52,10 @@ class Flight():
             self.move.move(angle=str_angle, is_cont=True)
 
 
-    @log_on_start(logging.INFO, "Starting sensor publisher")
-    def produce_sensor_data(self, bus, delay_time, runtime):
-        start_time = time.time()
-        while time.time() - start_time < runtime:
-            data = self.sense.get_grayscale_data()
-            bus.set_message(data, "produce_sensor_data")
-            time.sleep(delay_time)
-
-    @log_on_start(logging.INFO, "Starting interpreter sub/pub")
-    def consume_sens_produce_loc(self, read_bus, write_bus, delay_time, runtime):
-        start_time = time.time()
-        while time.time() - start_time < runtime:
-            data = read_bus.get_message("consume_sens_produce_loc")
-            loc = self.int.interpret_location(data)
-            write_bus.set_message(loc, "consume_sens_produce_loc")
-            time.sleep(delay_time)
-
-    @log_on_start(logging.INFO, "Starting mover sub")
-    def consume_loc_and_move(self, read_bus, delay_time, runtime):
-        start_time = time.time()
-        while time.time() - start_time < runtime:
-            loc = read_bus.get_message("consume_loc_and_move")
-            self.move_for_line_following(loc)
-            time.sleep(delay_time)
-
-
 if __name__ == "__main__":
     fl = Flight()
     grayscale_bus = rossros.Bus(name="grayscale")
+    ultra_bus = rossros.Bus(name="ultrasonic")
     loc_bus = rossros.Bus(name="location")
     timer_bus = rossros.Bus(name="timer")
     sensor_delay = 0.01
@@ -95,11 +68,12 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     sensor_producer = rossros.Producer(fl.sense.get_grayscale_data, grayscale_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="grayscale_producer")
+    sensultra_prod = rossros.Producer(fl.sense_ultra.get_ultrasonic_data, ultra_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="ultrasonic_producer")
     interpreter_consumerproducer = rossros.ConsumerProducer(fl.int.interpret_location, (grayscale_bus,), (loc_bus,), delay=interpret_delay, termination_busses=(timer_bus,), name="interpreter_consprod")
     controller_consumer = rossros.Consumer(fl.move_for_line_following, (loc_bus,), delay=move_delay, termination_busses=(timer_bus,), name="controller_consumer")
     timer = rossros.Timer((timer_bus,), duration=0.5, delay=0.1, termination_busses=(timer_bus,), name="master timer")
 
-    prod_cons_list = [timer, sensor_producer, interpreter_consumerproducer, controller_consumer]
+    prod_cons_list = [timer, sensor_producer, sensultra_prod, interpreter_consumerproducer] #, controller_consumer]
     rossros.runConcurrently(prod_cons_list)
     # with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
     #     eSensor = executor.submit(fl.produce_sensor_data, grayscale_bus, sensor_delay, runtime)
