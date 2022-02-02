@@ -51,10 +51,10 @@ class Flight():
         spd = 50*spd_scale
         logging.info(f"Setting speed to {spd}")
         str_angle = self.ctlr.steer(loc)
-        # if abs(str_angle) > 20:
-        #     self.move.move(angle=str_angle, speed=spd/2, is_cont=True)
-        # else:
-        #     self.move.move(angle=str_angle, speed=spd, is_cont=True)
+        if abs(str_angle) > 20:
+            self.move.move(angle=str_angle, speed=spd/2, is_cont=True)
+        else:
+            self.move.move(angle=str_angle, speed=spd, is_cont=True)
 
 
 if __name__ == "__main__":
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     move_delay = 0.05
 
     # Time until timeout (I had trouble stopping the code from running with concurrent going)
-    runtime = .5
+    runtime = 5
 
     logging.getLogger().setLevel(logging.INFO)
 

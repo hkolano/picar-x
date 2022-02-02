@@ -181,7 +181,7 @@ class InterpreterUltrasonic():
         else:
             slowing_range = self.slow_threshold - self.stop_threshold
             prop = (dist - self.stop_threshold)/slowing_range
-            logging.info(f"Getting close... setting speed to {prop}%")
+            logging.info(f"Getting close... setting scaling to {prop}%")
             return prop
 
 
