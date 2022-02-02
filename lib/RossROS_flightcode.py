@@ -73,7 +73,7 @@ if __name__ == "__main__":
     sensor_producer = rossros.Producer(fl.sense.get_grayscale_data, grayscale_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="grayscale_producer")
     sensultra_prod = rossros.Producer(fl.sense_ultra.get_ultrasonic_data, ultra_bus, delay=sensor_delay, termination_busses=(timer_bus,), name="ultrasonic_producer")
     interpreter_consumerproducer = rossros.ConsumerProducer(fl.int.interpret_location, (grayscale_bus,), (loc_bus,), delay=interpret_delay, termination_busses=(timer_bus,), name="interpreter_consprod")
-    int_ultra_consprod = rossros.ConsumerProducer(fl.int_wall.interpret_distance, (ultra_bus,), (wall_bus,), termination_busses=(timer_bus,), name="wallint_consprod")
+    int_ultra_consprod = rossros.ConsumerProducer(fl.int_wall.interpret_distance, (ultra_bus,), (wall_bus,), delay=interpret_delay, termination_busses=(timer_bus,), name="wallint_consprod")
     controller_consumer = rossros.Consumer(fl.move_for_line_following, (loc_bus,), delay=move_delay, termination_busses=(timer_bus,), name="controller_consumer")
     timer = rossros.Timer((timer_bus,), duration=5, delay=0.1, termination_busses=(timer_bus,), name="master timer")
 
